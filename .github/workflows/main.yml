@@ -15,7 +15,7 @@ jobs:
         run: |
           rm -rf project
           mkdir project
-          unzip -q WardrobeTracker-v1.0.zip -d project
+          unzip -q WardrobeTracker-v1.1-fixed.zip -d project
 
       - name: Find Android project
         run: |
