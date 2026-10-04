@@ -1,0 +1,36 @@
+name: Build Wardrobe Tracker APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download project
+        uses: actions/checkout@v4
+
+      - name: Extract project ZIP
+        run: |
+          mkdir project
+          unzip -q WardrobeTracker-v1.0.zip -d project
+
+      - name: Find Android project
+        run: |
+          GRADLEW=$(find project -name gradlew -type f | head -n 1)
+          echo "GRADLEW=$GRADLEW" >> $GITHUB_ENV
+          echo "PROJECT_DIR=$(dirname "$GRADLEW")" >> $GITHUB_ENV
+
+      - name: Make Gradle executable
+        run: chmod +x "$GRADLEW"
+
+      - name: Build APK
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Wardrobe-Tracker-APK
+          path: "**/build/outputs/apk/debug/*.apk"
